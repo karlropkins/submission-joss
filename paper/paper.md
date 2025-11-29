@@ -1,56 +1,159 @@
 ---
-title: 'The Experiment Factory: Reproducible Experiment Containers'
-tags:
-  - containers
-  - docker
-  - psychology
-  - reproducibility
-  - Docker
+title: 'AQEval: R code for the analysis of discrete change in Air Quality time-series'
+tags: 
+    - R
+    - environmental research
+    - air quality
+    - time-series analysis 
+    - change detection 
+    - break-point/segment
 authors:
- - name: Vanessa Sochat
-   orcid: 0000-0002-4387-3819
-   affiliation: 1
+    - name: Karl Ropkins
+      orcid: 0000-0002-0294-6997
+      affiliation: "1"
+    - name: Anthony Walker
+      orcid: 0000-0003-3979-0989
+      affiliation: "2"
+    - name: Ian Philips
+      orcid: 0000-0003-1938-7842
+      affiliation: "1"
+    - name: Christopher E. Rushton
+      orcid: 0000-0002-0159-5187
+      affiliation: "1"
+    - name: Tony Clark
+      affiliation: "2"
+    - name: James E. Tate
+      orcid: 0000-0003-1646-6852
+      affiliation: "1"
 affiliations:
- - name: Stanford University Research Computing
-   index: 1
-date: 28 November 2017
+    - index: 1
+      name: Institute for Transport Studies, University of Leeds, Leeds, LS2 9JT, UK
+    - index: 2
+      name: Joint Air Quality Unit, Department for Transport & Department for Environment, Food and Rural Affairs, Marsham Street London, SW1P 4DF, UK
+date: 2 June 2025
 bibliography: paper.bib
 ---
 
 # Summary
 
-The Experiment Factory [@vanessa_sochat_2017_1059119] is Open Source software that makes it easy to generate reproducible behavioral experiments. It offers a browsable, and tested [library](https://expfactory.github.io/experiments/) of experiments, games, and surveys, support for multiple kinds of databases, and [robust documentation](https://expfactory.github.io/expfactory/) for the provided tools. A user interested in deploying a behavioral assessment can simply select a grouping of paradigms from the web interface, and build a container to serve them.
+`AQEval` (Air Quality Evaluation) is an `R` package for the routine investigation 
+of discrete changes in air quality time-series. The main functions use 
+break-point/segmentation (BP/S) methods to detect, characterise and quantify change, 
+while other functions build on these to provide a workflow to measure smaller changes 
+and/or changes in more complex environments. 
 
-![img/portal.png](img/portal.png)
+# Statement of Need
 
+Authorities responsible for air quality management are typically required to implement and 
+evaluate air quality interventions they adopt [@bradley2019review]. These interventions 
+are often costly, disruptive and unpopular [@glazener2019transforming], and the inherent 
+variability monitoring data hinders impact assessments 
+[@kelly2011impact; @pearce2011quantifying; @jones2012large; @grange2019using]. Various methods 
+have been developed to investigate discrete changes in a wide range of time-series 
+[see e.g. @reeves2007review; @truong2020selective] and several `R` [@r2025r] packages have 
+been developed for their use, e.g. `bcp` [@erdman2008bcp], `changepoint` [@killick2016changepoint], 
+`segmented` [@muggeo2008segmented], and `strucchange` [@zeileis2002strucchange]. Some have even 
+been applied to air quality time-series (see e.g. @carslaw2006change, @carslaw2007detecting). 
+However, many of those tasked with air quality policy assessment, although highly skilled in a 
+wide range of monitoring activities, are unlike to be able to dedicate sufficient time and resources 
+to the development of in-house expertise in such specialist analyses. `AQEval` was developed to 
+address this skill gap. It aligns the inputs and outputs of a number of statistical methods to 
+provide a one-package option for anyone interested in using `R` to routinely investigate change 
+in air quality data. As many air quality professionals already use the `R` package `openair` 
+[@carslaw2012openair; @ropkins2012openair] for more conventional analysis and data visualisation, 
+`AQEval` has also been written using `openair` coding conventions to reduce the learning-curve 
+typically associated with learning new software. 
 
-# Challenges with Behavioral Research
+# Sources
 
-The reproducibility crisis [@Ram2013-km, @Stodden2010-cu, @noauthor_2015-ig, @noauthor_undated-sn, @Baker_undated-bx, @Open_Science_Collaboration2015-hb] has been well met by many efforts [@Belmann2015-eb, @Moreews2015-dy, @Boettiger2014-cz, @Santana-Perez2015-wo, @Wandell2015-yt] across scientific disciplines to capture dependencies required for a scientific analysis. Behavioral research is especially challenging, historically due to the need to bring a study participant into the lab, and currently due to needing to develop and validate a well-tested set of paradigms. A common format for these paradigms is a web-based format that can be done on a computer with an internet connection, without one if all resources are provided locally. However, while many great tools exist for creating the web-based paradigms [@De_Leeuw2015-zw, @McDonnell2012-ns], still lacking is assurance that the generated paradigms will be reproducible. Specifically, the following challenges remain:
+`AQEval` is freely available under General Public License (GPL): 
 
- - **Dependencies** such as software, experiment static files, and runtime variables must be captured for reproduciblity.
- - Individual experiments and the library must be **version controlled.**
- - Each experiment could benefit from being maintianed and tested in an **Open Source** fashion. This means that those knowledgable about the paradigm can easily collaborate on code, and others can file issues and ask questions.
- - Tools must allow for **flexibility** to allow different libraries (e.g., JavaScript).
- - The final product should be **easy to deploy** exactly as the creator intended.
+-	The latest (stable) release version of `AQEval` is on the Comprehensive R Archive Network (CRAN) 
+[https://CRAN.R-project.org/package=AQEval](https://CRAN.R-project.org/package=AQEval); 
+-	The developers’ version and code are publicly on GitHub 
+[https://github.com/karlropkins/AQEval](https://github.com/karlropkins/AQEval), where issues or change 
+requests can also be posted; and 
+-	The project website is at [https://karlropkins.github.io/AQEval/](https://karlropkins.github.io/AQEval/).
 
-The early version of the Experiment Factory [@Sochat2016-pu] did a good job to develop somewhat modular paradigms, and offered a small set of Python tools to generate local, static batteries from a single repository. Unfortunately, it was severely limited in its ability to scale, and provide reproducible deployments via linux containers [@Merkel2014-da]. The experiments were required to conform to specific set of software, the lack of containerization meant that installation was challenging and error prone, and importantly, it did not meet the complete set of goals outlined above. While the `expfactory-docker` [@noauthor_undated-pi, @Sochat2016-pu] image offered a means to deploy experiments to Amazon Mechanical Turk, it required substantial setup and was primarily developed to meet the specific needs of one lab.
+# Analytical Rationale
 
-![img/expfactory.png](img/expfactory.png)
+The `AQEval` Break-Point/Segment (BP/S) methods involve three steps: finding possible ‘points-of-change’, 
+testing these and quantifying ‘regions-of-change’ about the most likely:  
 
-# Experiment Container Generation
-The software outlined here, "expfactory," shares little with the original implementation beyond the name. Specifically, it allows for encapsulation of all dependencies and static files required for behavioral experimentation, and flexibility to the user for configuration of the deployment. For usage of a pre-existing experiment container, the user simply needs to run the Docker image. For generation of a new, custom container the generation workflow is typically the following:
- 
- - **Selection** The user browses a [library](https://expfactory.github.io/experiments/) of available experiments, surveys, and games. A preview is available directly in the browser, and data saved to the local machine for inspection. The preview reflects exactly what will be installed into the container.
- - **Generation** The user selects one or more paradigms to add to the container, and clicks "Generate." The user runs the command shown in the browser on his or her local machine to produce the custom recipe for the container, called a Dockerfile.
- - **Building** The user builds the container (and optionally adds the Dockerfile to version control or automated building on Docker Hub) and uses it in production. The same container is then available for others that want to reproduce the experiment.
+1. Breaks-points are determined using the `strucchange` methods of Zeileis and colleagues 
+   [@zeileis2002strucchange; @zeileis2003testing]. Here, a rolling-window approach is applied: 
+   a first subset (time-series window TW~0~ in \autoref{fig:1}a) is selected and linear 
+   regression modelled; the window advanced (TW~1~ in \autoref{fig:1}a) and a second 
+   model built, and so on through the time-series; then, likely points-of-change 
+   assigned by comparing the F-Stat scores of sequential models. 
+2. In addition to the standard Bayesian Information Criterion (BIC) testing used by `strucchange`, 
+   `AQEval` also checks all individual break-points are statistically valid (p<0.05), and down-scores 
+   less likely combinations. 
+3. Finally, the `segmented` methods of Muggeo and colleagues [@muggeo2003estimating; @muggeo2008segmented; 
+   @muggeo2017interval] are used to determine regions-of-change about break-points. Here, the confidence 
+   intervals for the selected break-points are used as start points, and segments assigned 
+   by random walk testing about these points as shown in \autoref{fig:1}b. 
 
-At runtime, the user is then able to select deployment customization such as database (MySQL, PostgreSQL, sqlite3, or default of filesystem), and a study identifier.
+![Break-point/segment scheme: (a) break-point, and (b) segment modelling about break-points.](assets/figure_1.png){#fig:1} 
 
+\autoref{fig:2} shows the break-point/segment analysis of an NO~2~ time-series from a roadside site 
+where a change event (*ca.* 25 $\mu$g.m^-3^; 31%) is detected between 2003-01-11 and 2003-02-19. 
 
-# Experiment Container Usage
-Once a container is generated and it's unique identifier and image layers served in a registry like Docker Hub, it can be cited in a paper with confidence that others can run and reproduce the work simply by using it.
+![Standard AQEval break-point/segment analysis (graphical output and report) of an NO~2~ 1998-2005 time-series from a heavily trafficked roadside in the UK.](assets/figure_2.png){#fig:2}  
 
-More information on experiment development and contribution to the expfactory tools, containers, or library is provided at the Experiment Factory  <a href="https://expfactory.github.io/expfactory/" target="_blank">official documentation</a>. This is an Open Source project, and so <a href="https://www.github.com/expfactory/expfactory/issues" target="_blank">feedback and contributions</a> are encouraged and welcome.
+In some cases changes are small or local air inputs are complex, and time-series may require additional 
+pre-processing to successfully isolate obscured change-events. For these, `AQEval` uses Generalized 
+Additive Models (GAMs) [using `mgcv` methods, @wood2017generalized; @wood2025generalized] to 
+subtract associated variance, by default: 
+$$[pollutant] = s_1(day~of~year) + s_2(hour~of~day) + te_1(wind~speed,wind~direction)$$
+$$[pollutant]_{isolated} = ([pollutant] - [pollutant]_{predicted}) + mean(pollutant)$$
+
+Where the investigated pollutant concentration, *[pollutant]*, is modelled as a function of 
+*day of year*, *hour of day* and *wind speed* and *direction* using a combination of spline 
+(*s~1~* and *s~2~*) and tensor (*te~1~*) fit-terms, and the unmodelled component, 
+*[pollutant]~isolated~*, is estimated as the mean-centred residual of this model. 
+
+\autoref{fig:3}a shows the break-point analysis of NO~2~ from a nearby but 
+less heavily trafficked site where seasonality dominates the time-series, and \autoref{fig:3}b shows the 
+smaller (*ca.* 6.6 $\mu$g.m^-3^; 13%) underlying change-event observed at a similar 
+time to the large change observed at the more heavily trafficked site in \autoref{fig:2} using 
+signal isolation and then break-point/segment analysis (2002-09-09 to 2002-12-21 compared with 
+2003-01-11 and 2003-02-19).  
+  
+![AQEval analysis of NO~2~ 1998-2005 time-series from a roadside site where: (a) standard (ambient air) break-point analysis exhibits a near-regular distribution of breaks typical of a site dominated by seasonal factors; and, (b) an underlying change-event is revealed using signal isolation and then break-point/segment analysis.](assets/figure_3.png){#fig:3}
+
+This default correction can also be modified to include other potential confounders, e.g. other 
+frequency terms (e.g. day of week and/or week of year), background contributions (as 
+local variance associated with trends at near-by site not affected by the investigated change), 
+or proxies for other local contributors (e.g. other meteorological parameters like air temperature, 
+markers for other sources, etc). 
+
+# Related Outputs 
+
+The `AQEval` functions are described, along with worked examples of the code used to generate 
+Figures \ref{fig:2} and \ref{fig:3}, in the [extended package introduction](https://karlropkins.github.io/AQEval/articles/AQEval_Intro_Preprint.pdf). 
+Other work using `AQEval` include:
+
+-	[Ropkins & Tate (2021)](https://doi.org/10.1016/j.scitotenv.2020.142374), a peer-reviewed article 
+  on the multi-species AQEval analysis of air quality during the UK COVID-19 lockdown. 
+-	[Ropkins et al (2022)](https://doi.org/10.1039/D1EA00073J), a peer-reviewed article on 
+  the use of `AQEval` to measure the NO~2~ impact of bus fleet interventions. 
+-	Also Clear Air Zone (CAZ) impact assessment reports include analyses using `AQEval`, see e.g.: 
+    - [CAZ Baseline Study](https://www.ipsos.com/sites/default/files/ct/publication/documents/2021-02/15012_localno2plans-baselineresearchfindings.pdf) 
+    - [First Year Report](https://www.ipsos.com/sites/default/files/ct/news/documents/2022-05/local-no2-plans-main-report-may-2022.pdf) 
+    -	(...) 
+    - [Report archive](https://randd.defra.gov.uk/ProjectDetails?ProjectId=20688) 
+
+# Acknowledgements 
+
+Initial `AQEval` development was funded by the UK Department for Environment, Food and Rural Affairs 
+(Defra). The authors gratefully acknowledge contributions from colleagues at University 
+of Leeds, Defra and IPSOS Mori, and internal review by the Defra/Department for Transport Joint Air Quality 
+Unit (JAQU) Technical Independent Review Panel (T-IRP). The authors also 
+gratefully acknowledge the work of the R core team and collaborators in developing and 
+maintaining the open-source statistical language R and associated packages [http://www.r-project.org/](http://www.r-project.org/).  
+
+The views and opinions expressed herein by the authors are their own and do not necessarily reflect those 
+of UK Government or any agency thereof.
 
 # References
