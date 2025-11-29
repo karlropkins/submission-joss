@@ -30,7 +30,7 @@ affiliations:
       name: Institute for Transport Studies, University of Leeds, Leeds, LS2 9JT, UK
     - index: 2
       name: Joint Air Quality Unit, Department for Transport & Department for Environment, Food and Rural Affairs, Marsham Street London, SW1P 4DF, UK
-date: 2 June 2025
+date: 29 November 2025
 bibliography: paper.bib
 ---
 
@@ -39,8 +39,8 @@ bibliography: paper.bib
 `AQEval` (Air Quality Evaluation) is an `R` package for the routine investigation 
 of discrete changes in air quality time-series. The main functions, `quantBreakPoints` 
 and `quantBreakSegments` use a three-step method to find possible ‘points-of-change’, 
-test these and quantify the most likely or 'regions-of-change' about them. Other 
-key functions build of these to provide a workflow to measure smaller changes 
+test these and quantify the most likely or 'regions-of-change' about them, respectively. 
+Other key functions build of these to provide a workflow to measure smaller changes 
 and/or changes in more complex environments. 
 
 # Statement of Need
@@ -75,7 +75,7 @@ requests can also be posted; and
 
 # Analytical Rationale
 
-The main steps of the BP/S analysis are:   
+The main steps of the Break-Point/Segment (BP/S) analysis are:   
 
 1. Breaks-points are determined using the `strucchange` methods of Zeileis and colleagues 
    [@zeileis2002strucchange; @zeileis2003testing]. Here, a rolling-window approach is applied: 
@@ -138,9 +138,9 @@ Main Functions:
 ```r
 # to quantify Break-Points (as in Figure 3a)
 quantBreakPoints(
-  data,               # data source, typically an openair-freindly data.frame
-  pollutant,          # name of column containing the time-series to analysis
-  h,                  # the rolling window size, as a proportion of time-series
+  data,               # data source, typically an openair-friendly data.frame
+  pollutant,          # name of column containing the time-series to analysed
+  h,                  # the rolling window size, as a proportion of time-series length
   ...                 # other arguments 
 )
   
@@ -152,14 +152,15 @@ quantBreakPoints(
   ...                 
 )
 
-# For signal isolation 
+# For signal isolation (as used for Figure 3b)
 isolateContribution(
   data,               
   pollutant,
-  ...                 # other arguments allow user to modifying isolation method 
+  ...                 # other arguments allow user to modify the isolation method 
                       # (see package documentation for further details)
 )
   
+# findBreakPoints and testBreakPoints can also be used to fine-tune BP/S models
 
 ```
 
